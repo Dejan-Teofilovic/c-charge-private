@@ -25,7 +25,6 @@ export const PrimaryLinearProgressbar = styled(LinearProgress)({
 });
 
 export const ExchangeTextField = styled(TextField)({
-  fontSize: 15,
   '& label.Mui-focused': {
     color: 'black',
   },

@@ -15,7 +15,15 @@ import {
   COLOR_PRIMARY,
   COLOR_PRIMARY_OPACITY,
   FONT_FAMILY_PRIMARY,
-  FONT_FAMILY_SECONDARY
+  FONT_FAMILY_SECONDARY,
+  FONT_SIZE_BODY1_DESKTOP,
+  FONT_SIZE_BODY1_MOBILE,
+  FONT_SIZE_H4_DESKTOP,
+  FONT_SIZE_H4_MOBILE,
+  FONT_SIZE_H5_DESKTOP,
+  FONT_SIZE_H5_MOBILE,
+  FONT_SIZE_H6_DESKTOP,
+  FONT_SIZE_H6_MOBILE
 } from './utils/constants';
 import {
   ExchangeTextField,
@@ -29,14 +37,13 @@ function App() {
   const [busd, setBusd] = useState(0);
 
   const handleBusd = (value) => {
-    console.log(value.match(REGEX_NUMBER_VALID));
     if (value.match(REGEX_NUMBER_VALID)) {
       setBusd(value);
     }
   };
   return (
-    <Container maxWidth="lg">
-      <Stack sx={{ minHeight: '100vh' }} justifyContent="center" alignItems="center" spacing={5}>
+    <Container maxWidth="lg" sx={{ py: 3 }}>
+      <Stack sx={{ minHeight: '94vh' }} justifyContent="center" alignItems="center" spacing={5}>
         {/* Logo */}
         <Stack direction="row" justifyContent="center">
           <Box
@@ -62,11 +69,17 @@ function App() {
               titleTypographyProps={{
                 color: COLOR_PRIMARY,
                 fontFamily: FONT_FAMILY_PRIMARY,
-                variant: 'h4',
+                fontSize: { xs: FONT_SIZE_H4_MOBILE, md: FONT_SIZE_H4_DESKTOP },
                 fontWeight: 900,
               }}
               action={
-                <PrimaryButton sx={{ fontSize: 16, fontWeight: 700 }} variant="contained">
+                <PrimaryButton
+                  sx={{
+                    fontSize: { xs: FONT_SIZE_BODY1_MOBILE, md: FONT_SIZE_BODY1_DESKTOP },
+                    fontWeight: 700
+                  }}
+                  variant="contained"
+                >
                   Connect Wallet
                 </PrimaryButton>
               }
@@ -84,13 +97,13 @@ function App() {
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Typography
                     component="span"
-                    variant="h5"
+                    fontSize={{ xs: FONT_SIZE_BODY1_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                     fontFamily={FONT_FAMILY_SECONDARY}
                     fontWeight={900}
                   >Sold: 9,081,576.95 ANI</Typography>
                   <Typography
                     component="span"
-                    variant="h5"
+                    fontSize={{ xs: FONT_SIZE_BODY1_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                     fontFamily={FONT_FAMILY_SECONDARY}
                     fontWeight={900}
                   >Hard Cap: 20,000,000.00 ANI</Typography>
@@ -116,14 +129,14 @@ function App() {
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           color={COLOR_PRIMARY}
                           fontWeight={900}
                         >Current Price: </Typography>
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
                         >0.0046 BUSD / ANI</Typography>
@@ -131,14 +144,14 @@ function App() {
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           color={COLOR_PRIMARY}
                           fontWeight={900}
                         >Next Price: </Typography>
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
                         >0.0046 BUSD / ANI</Typography>
@@ -146,7 +159,7 @@ function App() {
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           color={COLOR_PRIMARY}
                           fontWeight={900}
@@ -155,14 +168,14 @@ function App() {
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           color={COLOR_PRIMARY}
                           fontWeight={900}
                         >Min Buy: </Typography>
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
                         >100.00 BUSD</Typography>
@@ -170,14 +183,14 @@ function App() {
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           color={COLOR_PRIMARY}
                           fontWeight={900}
                         >Max Buy: </Typography>
                         <Typography
                           component="span"
-                          variant="h5"
+                          fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
                         >150.00 BUSD</Typography>
@@ -198,7 +211,7 @@ function App() {
                       >
                         <Typography
                           component="span"
-                          variant="h6"
+                          fontSize={{ xs: FONT_SIZE_H6_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                           color={COLOR_PRIMARY}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
@@ -224,11 +237,11 @@ function App() {
                                   component="img"
                                   src="assets/images/busd.png"
                                   alt=""
-                                  width={40}
+                                  width={{ xs: 20, md: 40 }}
                                 />
                                 <Typography
                                   component="span"
-                                  variant="h6"
+                                  fontSize={{ xs: FONT_SIZE_H6_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                                   fontWeight={900}
                                   fontFamily={FONT_FAMILY_SECONDARY}
                                 >BUSD</Typography>
@@ -240,7 +253,7 @@ function App() {
 
                       {/* Arrow */}
                       <Stack direction="row" justifyContent="center">
-                        <MuiIcon sx={{ fontSize: 38, color: COLOR_PRIMARY, height: 'auto' }}>
+                        <MuiIcon sx={{ fontSize: { xs: 24, md: 38 }, color: COLOR_PRIMARY, height: 'auto' }}>
                           <Icon icon="simple-icons:convertio" />
                         </MuiIcon>
                       </Stack>
@@ -255,7 +268,7 @@ function App() {
                       >
                         <Typography
                           component="span"
-                          variant="h6"
+                          fontSize={{ xs: FONT_SIZE_H6_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                           color={COLOR_PRIMARY}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
@@ -266,7 +279,7 @@ function App() {
                             <Grid item xs={8} md={8}>
                               <Typography
                                 component="span"
-                                variant="h4"
+                                fontSize={{ xs: FONT_SIZE_H4_MOBILE, md: FONT_SIZE_H4_DESKTOP }}
                                 fontFamily={FONT_FAMILY_SECONDARY}
                                 fontWeight={900}
                               >0.00</Typography>
@@ -282,11 +295,11 @@ function App() {
                                   component="img"
                                   src="assets/images/logo.png"
                                   alt=""
-                                  width={40}
+                                  width={{ xs: 20, md: 40 }}
                                 />
                                 <Typography
                                   component="span"
-                                  variant="h6"
+                                  fontSize={{ xs: FONT_SIZE_H6_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                                   fontWeight={900}
                                   fontFamily={FONT_FAMILY_SECONDARY}
                                 >CCharge</Typography>
@@ -301,7 +314,14 @@ function App() {
               </Box>
 
               <Stack direction="row" justifyContent="center" mt={4}>
-                <PrimaryButton sx={{ fontSize: 24, fontWeight: 900, px: 6 }} variant="contained">
+                <PrimaryButton
+                  sx={{
+                    fontSize: { xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_MOBILE },
+                    fontWeight: 900,
+                    px: 6
+                  }}
+                  variant="contained"
+                >
                   Approve
                 </PrimaryButton>
               </Stack>
