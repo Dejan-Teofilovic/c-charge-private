@@ -31,22 +31,10 @@ const handlers = {
       currentAccount: action.payload
     };
   },
-  SET_BALANCE: (state, action) => {
-    return {
-      ...state,
-      balance: action.payload
-    };
-  },
   SET_PROVIDER: (state, action) => {
     return {
       ...state,
       provider: action.payload
-    };
-  },
-  SET_SIGNER: (state, action) => {
-    return {
-      ...state,
-      signer: action.payload
     };
   },
   SET_CONTRACT: (state, action) => {
@@ -65,7 +53,6 @@ const WalletContext = createContext({
   ...initialState,
   connectWallet: () => Promise.resolve(),
   disconnectWallet: () => Promise.resolve(),
-  getBalanceOfRewardPool: () => Promise.resolve()
 });
 
 //  Provider
@@ -95,7 +82,6 @@ function WalletProvider({ children }) {
       const web3Modal = await getWeb3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
-      console.log('# provider => ', provider);
       let accounts = null;
       let signer = null;
       let contract = null;
@@ -118,11 +104,6 @@ function WalletProvider({ children }) {
         });
 
         dispatch({
-          type: 'SET_SIGNER',
-          payload: signer
-        });
-
-        dispatch({
           type: 'SET_CONTRACT',
           payload: contract
         });
@@ -133,30 +114,6 @@ function WalletProvider({ children }) {
               method: 'wallet_switchEthereumChain',
               params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }],
             });
-
-            // accounts = await provider.listAccounts();
-            // signer = await provider.getSigner();
-            // contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-
-            // dispatch({
-            //   type: 'SET_CURRENT_ACCOUNT',
-            //   payload: accounts[0]
-            // });
-
-            // dispatch({
-            //   type: 'SET_PROVIDER',
-            //   payload: provider
-            // });
-
-            // dispatch({
-            //   type: 'SET_SIGNER',
-            //   payload: signer
-            // });
-
-            // dispatch({
-            //   type: 'SET_CONTRACT',
-            //   payload: contract
-            // });
           } catch (error) {
             if (error.code === CODE_SWITCH_ERROR) {
               /* ------------ Add new chain ------------- */
@@ -176,30 +133,6 @@ function WalletProvider({ children }) {
                   },
                 ],
               });
-
-              // accounts = await provider.listAccounts();
-              // signer = await provider.getSigner();
-              // contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-
-              // dispatch({
-              //   type: 'SET_CURRENT_ACCOUNT',
-              //   payload: accounts[0]
-              // });
-
-              // dispatch({
-              //   type: 'SET_PROVIDER',
-              //   payload: provider
-              // });
-
-              // dispatch({
-              //   type: 'SET_SIGNER',
-              //   payload: signer
-              // });
-
-              // dispatch({
-              //   type: 'SET_CONTRACT',
-              //   payload: contract
-              // });
               /* ---------------------------------------- */
             } else {
               throw error;
@@ -214,8 +147,6 @@ function WalletProvider({ children }) {
       }
       /* ---------------------------------------------- */
     } catch (error) {
-      console.log('# wallet connect error', error);
-
       dispatch({
         type: 'SET_CURRENT_ACCOUNT',
         payload: ''
@@ -223,11 +154,6 @@ function WalletProvider({ children }) {
 
       dispatch({
         type: 'SET_PROVIDER',
-        payload: null
-      });
-
-      dispatch({
-        type: 'SET_SIGNER',
         payload: null
       });
 
@@ -256,37 +182,17 @@ function WalletProvider({ children }) {
     });
 
     dispatch({
-      type: 'SET_SIGNER',
-      payload: null
-    });
-
-    dispatch({
       type: 'SET_CONTRACT',
       payload: null
     });
-
-    dispatch({
-      type: 'SET_BALANCE',
-      payload: 0
-    });
   };
 
-  const getBalanceOfRewardPool = async () => {
-    const { result } = await (await fetch(`https://api.bscscan.com/api?module=account&action=balance&address=${ADDRESS_OF_REWARD_POOL}&tag=latest&apikey=${SCAN_API_KEY}`)).json();
-
-    let balance = Number(result) * 10 ** -18;
-    dispatch({
-      type: 'SET_BALANCE_OF_REWARD_POOL',
-      payload: Number(balance.toFixed(2))
-    });
-  };
   return (
     <WalletContext.Provider
       value={{
         ...state,
         connectWallet,
         disconnectWallet,
-        getBalanceOfRewardPool
       }}
     >
       {children}

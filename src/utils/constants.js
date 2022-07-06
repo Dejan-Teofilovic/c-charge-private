@@ -32,8 +32,9 @@ export const MESSAGE_WALLET_CONNECT_ERROR = 'Wallet connect error. Try again, pl
 export const MESSAGE_SWITCH_NETWORK = 'Please switch the network to Binance Smart Chain.';
 export const MESSAGE_SMALLER_THAN_MIN_PRICE = 'The value of BNB must be same or over 0.001.';
 export const MESSAGE_BIGGER_THAN_MAX_PRICE = 'The value of BNB must be same or lower than 3.';
-export const MESSAGE_BALANCE_NOT_ENOUGH = "The balance of your wallet isn't too enough to buy the token.";
+export const MESSAGE_BALANCE_NOT_ENOUGH = "The balance of your wallet isn't enough to buy the token.";
 export const MESSAGE_TRANSACTION_SUCCESS = 'The transaction is succeed.';
+export const MESSAGE_TRANSACTION_REJECTED = 'The transaction is rejected.';
 
 export const SUCCESS = 'success';
 export const WARNING = 'warning';

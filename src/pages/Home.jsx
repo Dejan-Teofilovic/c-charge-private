@@ -29,6 +29,7 @@ import {
   MESSAGE_BALANCE_NOT_ENOUGH,
   MESSAGE_BIGGER_THAN_MAX_PRICE,
   MESSAGE_SMALLER_THAN_MIN_PRICE,
+  MESSAGE_TRANSACTION_REJECTED,
   MESSAGE_TRANSACTION_SUCCESS,
   NAME_FROM_CRYPTO,
   NAME_TO_CRYPTO,
@@ -54,8 +55,7 @@ export default function Home() {
     currentAccount,
     connectWallet,
     disconnectWallet,
-    contract,
-    // provider
+    contract
   } = useWallet();
   const { openAlert } = useAlertMessage();
   const [buyPrice, setBuyPrice] = useState('0');
@@ -89,11 +89,26 @@ export default function Home() {
         message: MESSAGE_TRANSACTION_SUCCESS
       });
     } catch (error) {
-      return openAlert({
-        severity: ERROR,
-        message: MESSAGE_BALANCE_NOT_ENOUGH
-      });
+      if (error.code === 4001) {
+        return openAlert({
+          severity: ERROR,
+          message: MESSAGE_TRANSACTION_REJECTED
+        });
+      } else if (error.code === -32603) {
+        return openAlert({
+          severity: ERROR,
+          message: MESSAGE_BALANCE_NOT_ENOUGH
+        });
+      }
     }
+  };
+
+  const handleDisconnectWallet = () => {
+    setBuyPrice('0');
+    setRate(0);
+    setMinBuyPrice(-1);
+    setMaxBuyPrice(-1);
+    disconnectWallet();
   };
 
   useEffect(() => {
@@ -157,7 +172,7 @@ export default function Home() {
                       fontWeight: 700
                     }}
                     variant="contained"
-                    onClick={() => disconnectWallet()}
+                    onClick={handleDisconnectWallet}
                   >
                     {currentAccount.slice(0, 10)}...{currentAccount.slice(-5)}
                   </PrimaryButton>
