@@ -13,7 +13,6 @@ import {
   WALLET_CONNECT_INFURA_ID,
 } from '../utils/constants';
 import { AlertMessageContext } from './AlertMessageContext';
-import { LoadingContext } from './LoadingContext';
 
 // ----------------------------------------------------------------------
 
@@ -32,10 +31,22 @@ const handlers = {
       currentAccount: action.payload
     };
   },
+  SET_BALANCE: (state, action) => {
+    return {
+      ...state,
+      balance: action.payload
+    };
+  },
   SET_PROVIDER: (state, action) => {
     return {
       ...state,
       provider: action.payload
+    };
+  },
+  SET_SIGNER: (state, action) => {
+    return {
+      ...state,
+      signer: action.payload
     };
   },
   SET_CONTRACT: (state, action) => {
@@ -54,15 +65,13 @@ const WalletContext = createContext({
   ...initialState,
   connectWallet: () => Promise.resolve(),
   disconnectWallet: () => Promise.resolve(),
-  getBalanceOfRewardPool: () => Promise.resolve(),
-  getProviderAndContract: () => Promise.resolve()
+  getBalanceOfRewardPool: () => Promise.resolve()
 });
 
 //  Provider
 function WalletProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
   const { openAlert } = useContext(AlertMessageContext);
-  const { openLoading, closeLoading } = useContext(LoadingContext);
 
   const getWeb3Modal = async () => {
     const web3Modal = new Web3Modal({
@@ -83,20 +92,40 @@ function WalletProvider({ children }) {
   /** Connect wallet */
   const connectWallet = async () => {
     try {
-      openLoading();
+      const web3Modal = await getWeb3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      console.log('# provider => ', provider);
       let accounts = null;
-      const { chainId } = await state.provider.getNetwork();
+      let signer = null;
+      let contract = null;
+      const { chainId } = await provider.getNetwork();
 
       /* --------------- Switch network --------------- */
       if (chainId === CHAIN_ID) {
-        accounts = await state.provider.listAccounts();
+        accounts = await provider.listAccounts();
+        signer = await provider.getSigner();
+        contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
         dispatch({
           type: 'SET_CURRENT_ACCOUNT',
           payload: accounts[0]
         });
 
-        await closeLoading();
+        dispatch({
+          type: 'SET_PROVIDER',
+          payload: provider
+        });
+
+        dispatch({
+          type: 'SET_SIGNER',
+          payload: signer
+        });
+
+        dispatch({
+          type: 'SET_CONTRACT',
+          payload: contract
+        });
       } else {
         if (window.ethereum) {
           try {
@@ -105,15 +134,29 @@ function WalletProvider({ children }) {
               params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }],
             });
 
-            accounts = await state.provider.listAccounts();
+            // accounts = await provider.listAccounts();
+            // signer = await provider.getSigner();
+            // contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-            dispatch({
-              type: 'SET_CURRENT_ACCOUNT',
-              payload: accounts[0]
-            });
+            // dispatch({
+            //   type: 'SET_CURRENT_ACCOUNT',
+            //   payload: accounts[0]
+            // });
 
-            closeLoading();
+            // dispatch({
+            //   type: 'SET_PROVIDER',
+            //   payload: provider
+            // });
 
+            // dispatch({
+            //   type: 'SET_SIGNER',
+            //   payload: signer
+            // });
+
+            // dispatch({
+            //   type: 'SET_CONTRACT',
+            //   payload: contract
+            // });
           } catch (error) {
             if (error.code === CODE_SWITCH_ERROR) {
               /* ------------ Add new chain ------------- */
@@ -134,18 +177,32 @@ function WalletProvider({ children }) {
                 ],
               });
 
-              accounts = await state.provider.listAccounts();
+              // accounts = await provider.listAccounts();
+              // signer = await provider.getSigner();
+              // contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
-              dispatch({
-                type: 'SET_CURRENT_ACCOUNT',
-                payload: accounts[0]
-              });
+              // dispatch({
+              //   type: 'SET_CURRENT_ACCOUNT',
+              //   payload: accounts[0]
+              // });
 
-              closeLoading();
+              // dispatch({
+              //   type: 'SET_PROVIDER',
+              //   payload: provider
+              // });
+
+              // dispatch({
+              //   type: 'SET_SIGNER',
+              //   payload: signer
+              // });
+
+              // dispatch({
+              //   type: 'SET_CONTRACT',
+              //   payload: contract
+              // });
               /* ---------------------------------------- */
             } else {
               throw error;
-              closeLoading();
             }
           }
         } else {
@@ -153,7 +210,6 @@ function WalletProvider({ children }) {
             severity: ERROR,
             message: MESSAGE_SWITCH_NETWORK
           });
-          closeLoading();
         }
       }
       /* ---------------------------------------------- */
@@ -171,6 +227,11 @@ function WalletProvider({ children }) {
       });
 
       dispatch({
+        type: 'SET_SIGNER',
+        payload: null
+      });
+
+      dispatch({
         type: 'SET_CONTRACT',
         payload: null
       });
@@ -179,8 +240,6 @@ function WalletProvider({ children }) {
         severity: ERROR,
         message: MESSAGE_WALLET_CONNECT_ERROR
       });
-
-      closeLoading();
     }
   };
 
@@ -197,26 +256,18 @@ function WalletProvider({ children }) {
     });
 
     dispatch({
+      type: 'SET_SIGNER',
+      payload: null
+    });
+
+    dispatch({
       type: 'SET_CONTRACT',
       payload: null
     });
-  };
-
-  const getProviderAndContract = async () => {
-    const web3Modal = await getWeb3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = await provider.getSigner();
-    const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
 
     dispatch({
-      type: 'SET_PROVIDER',
-      payload: provider
-    });
-
-    dispatch({
-      type: 'SET_CONTRACT',
-      payload: contract
+      type: 'SET_BALANCE',
+      payload: 0
     });
   };
 
@@ -235,8 +286,7 @@ function WalletProvider({ children }) {
         ...state,
         connectWallet,
         disconnectWallet,
-        getBalanceOfRewardPool,
-        getProviderAndContract
+        getBalanceOfRewardPool
       }}
     >
       {children}

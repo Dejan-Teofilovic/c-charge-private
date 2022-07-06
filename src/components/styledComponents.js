@@ -52,6 +52,9 @@ export const ExchangeTextField = styled(TextField)({
     '&.Mui-focused fieldset': {
       border: 'none',
     },
+    '&.Mui-disabled fieldset': {
+      border: 'none',
+    },
   },
   '& .MuiOutlinedInput-input': {
     fontSize: 24,
