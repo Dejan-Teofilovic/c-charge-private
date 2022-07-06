@@ -41,6 +41,7 @@ function LoadingProvider({ children }) {
   };
 
   const closeLoading = () => {
+    console.log('# closeLoading');
     dispatch({
       type: 'INITIALIZE',
       payload: {

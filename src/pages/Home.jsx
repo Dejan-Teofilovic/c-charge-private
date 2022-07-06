@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Card,
@@ -42,13 +42,23 @@ const REGEX_NUMBER_VALID = /^[0-9]*\.?[0-9]*$/;
 
 export default function Home() {
   const [fromCrypto, setFromCrypto] = useState(0);
-  const { currentAccount, connectWallet, disconnectWallet } = useWallet();
+  const {
+    currentAccount,
+    connectWallet,
+    disconnectWallet,
+    contract,
+    getProviderAndContract
+  } = useWallet();
 
   const handleFromCrypto = (value) => {
     if (value.match(REGEX_NUMBER_VALID)) {
       setFromCrypto(value);
     }
   };
+
+  useEffect(() => {
+    getProviderAndContract();
+  }, []);
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>

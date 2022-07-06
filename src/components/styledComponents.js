@@ -70,7 +70,6 @@ export const ExchangeTextField = styled(TextField)({
 
 export const CustomDialog = styled(Dialog)({
   '& .MuiPaper-root': {
-    borderRadius: 25,
-    bgColor: COLOR_PRIMARY
+    borderRadius: 10,
   }
 });
