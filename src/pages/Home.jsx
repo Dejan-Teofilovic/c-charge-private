@@ -23,7 +23,9 @@ import {
   FONT_SIZE_H5_DESKTOP,
   FONT_SIZE_H5_MOBILE,
   FONT_SIZE_H6_DESKTOP,
-  FONT_SIZE_H6_MOBILE
+  FONT_SIZE_H6_MOBILE,
+  NAME_FROM_CRYPTO,
+  NAME_TO_CRYPTO
 } from '../utils/constants';
 import {
   ExchangeTextField,
@@ -32,13 +34,19 @@ import {
 } from '../components/styledComponents';
 import useWallet from '../hooks/useWallet';
 
+/* --------------------------------------------------------------------------- */
+
+const REGEX_NUMBER_VALID = /^[0-9]*\.?[0-9]*$/;
+
+/* --------------------------------------------------------------------------- */
+
 export default function Home() {
-  const [busd, setBusd] = useState(0);
+  const [fromCrypto, setFromCrypto] = useState(0);
   const { currentAccount, connectWallet, disconnectWallet } = useWallet();
 
-  const handleBusd = (value) => {
+  const handleFromCrypto = (value) => {
     if (value.match(REGEX_NUMBER_VALID)) {
-      setBusd(value);
+      setFromCrypto(value);
     }
   };
 
@@ -116,13 +124,13 @@ export default function Home() {
                     fontSize={{ xs: FONT_SIZE_BODY1_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                     fontFamily={FONT_FAMILY_SECONDARY}
                     fontWeight={900}
-                  >Sold: 9,081,576.95 ANI</Typography>
+                  >Sold: 9,081,576.95 {NAME_TO_CRYPTO}</Typography>
                   <Typography
                     component="span"
                     fontSize={{ xs: FONT_SIZE_BODY1_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                     fontFamily={FONT_FAMILY_SECONDARY}
                     fontWeight={900}
-                  >Hard Cap: 20,000,000.00 ANI</Typography>
+                  >Hard Cap: 20,000,000.00 {NAME_TO_CRYPTO}</Typography>
                 </Stack>
 
                 <PrimaryLinearProgressbar
@@ -132,15 +140,16 @@ export default function Home() {
               </Stack>
 
               <Box mt={4}>
-                <Grid container spacing={2}>
+                <Grid container spacing={2} alignItems="stretch">
                   {/* Current status */}
                   <Grid item xs={12} md={6}>
                     <Stack
-                      p={3}
-                      justifyContent="space-between"
+                      px={3}
+                      justifyContent="center"
                       spacing={3}
                       borderRadius="50px 0 50px 0"
                       bgcolor={COLOR_PRIMARY_OPACITY}
+                      sx={{ height: '100%' }}
                     >
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
@@ -149,15 +158,15 @@ export default function Home() {
                           fontFamily={FONT_FAMILY_SECONDARY}
                           color={COLOR_PRIMARY}
                           fontWeight={900}
-                        >Current Price: </Typography>
+                        >Price: </Typography>
                         <Typography
                           component="span"
                           fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
-                        >0.0046 BUSD / ANI</Typography>
+                        >0.0046 {NAME_FROM_CRYPTO} / {NAME_TO_CRYPTO}</Typography>
                       </Stack>
-                      <Stack direction="row" justifyContent="space-between" alignItems="center">
+                      {/* <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
                           component="span"
                           fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
@@ -170,7 +179,7 @@ export default function Home() {
                           fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
-                        >0.0046 BUSD / ANI</Typography>
+                        >0.0046 {NAME_FROM_CRYPTO} / {NAME_TO_CRYPTO}</Typography>
                       </Stack>
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
@@ -180,7 +189,7 @@ export default function Home() {
                           color={COLOR_PRIMARY}
                           fontWeight={900}
                         >In 0d 0h 13m 57s </Typography>
-                      </Stack>
+                      </Stack> */}
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
                           component="span"
@@ -194,7 +203,7 @@ export default function Home() {
                           fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
-                        >100.00 BUSD</Typography>
+                        >100.00 {NAME_FROM_CRYPTO}</Typography>
                       </Stack>
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Typography
@@ -209,15 +218,15 @@ export default function Home() {
                           fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                           fontFamily={FONT_FAMILY_SECONDARY}
                           fontWeight={900}
-                        >150.00 BUSD</Typography>
+                        >150.00 {NAME_FROM_CRYPTO}</Typography>
                       </Stack>
                     </Stack>
                   </Grid>
 
                   {/* Exchange */}
                   <Grid item xs={12} md={6}>
-                    <Stack sx={{ height: '100%' }} justifyContent="space-between">
-                      {/* BUSD */}
+                    <Stack sx={{ height: '100%' }} justifyContent="center" spacing={2}>
+                      {/* {NAME_FROM_CRYPTO} */}
                       <Stack
                         spacing={1}
                         px={2}
@@ -237,9 +246,9 @@ export default function Home() {
                           <Grid container spacing={2} alignItems="center">
                             <Grid item xs={8} md={8}>
                               <ExchangeTextField
-                                name="busd"
-                                value={busd}
-                                onChange={(e) => handleBusd(e.target.value)}
+                                name="from-crypto"
+                                value={fromCrypto}
+                                onChange={(e) => handleFromCrypto(e.target.value)}
                               />
                             </Grid>
                             <Grid item xs={4} md={4}>
@@ -251,7 +260,7 @@ export default function Home() {
                               >
                                 <Box
                                   component="img"
-                                  src="assets/images/busd.png"
+                                  src="assets/images/bnb.png"
                                   alt=""
                                   width={{ xs: 20, md: 40 }}
                                 />
@@ -260,7 +269,7 @@ export default function Home() {
                                   fontSize={{ xs: FONT_SIZE_H6_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                                   fontWeight={900}
                                   fontFamily={FONT_FAMILY_SECONDARY}
-                                >BUSD</Typography>
+                                >{NAME_FROM_CRYPTO}</Typography>
                               </Stack>
                             </Grid>
                           </Grid>
@@ -318,7 +327,7 @@ export default function Home() {
                                   fontSize={{ xs: FONT_SIZE_H6_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                                   fontWeight={900}
                                   fontFamily={FONT_FAMILY_SECONDARY}
-                                >CCharge</Typography>
+                                >{NAME_TO_CRYPTO}</Typography>
                               </Stack>
                             </Grid>
                           </Grid>
