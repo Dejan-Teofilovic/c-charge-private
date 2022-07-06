@@ -1,4 +1,11 @@
-import { Button, styled, LinearProgress, linearProgressClasses, TextField } from '@mui/material';
+import {
+  Button,
+  styled,
+  LinearProgress,
+  linearProgressClasses,
+  TextField,
+  Dialog
+} from '@mui/material';
 import { grey } from '@mui/material/colors';
 import { COLOR_PRIMARY, COLOR_WHITE, FONT_FAMILY_SECONDARY } from "../utils/constants";
 
@@ -58,5 +65,12 @@ export const ExchangeTextField = styled(TextField)({
   },
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'rgba(0, 0, 0, 0)'
+  }
+});
+
+export const CustomDialog = styled(Dialog)({
+  '& .MuiPaper-root': {
+    borderRadius: 25,
+    bgColor: COLOR_PRIMARY
   }
 });
