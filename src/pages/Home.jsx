@@ -12,9 +12,13 @@ import {
 } from '@mui/material';
 import { Icon } from '@iconify/react';
 import { ethers } from 'ethers';
+import { BigNumber } from 'ethers/lib/ethers';
 import {
   COLOR_PRIMARY,
   COLOR_PRIMARY_OPACITY,
+  CONTRACT_ABI_BUSD,
+  CONTRACT_ADDRESS,
+  CONTRACT_ADDRESS_BUSD,
   ERROR,
   FONT_FAMILY_PRIMARY,
   FONT_FAMILY_SECONDARY,
@@ -26,8 +30,15 @@ import {
   FONT_SIZE_H5_MOBILE,
   FONT_SIZE_H6_DESKTOP,
   FONT_SIZE_H6_MOBILE,
+  HARD_CAP,
+  INIT_BUSD_CONTRACT,
+  INIT_BUY_PRICE,
+  INIT_EXCHANGE_RATE,
+  INIT_MAX_BUY_PRICE,
+  INIT_SOLD_AMOUNT,
   MESSAGE_BALANCE_NOT_ENOUGH,
   MESSAGE_BIGGER_THAN_MAX_PRICE,
+  MESSAGE_ERROR,
   MESSAGE_SMALLER_THAN_MIN_PRICE,
   MESSAGE_TRANSACTION_REJECTED,
   MESSAGE_TRANSACTION_SUCCESS,
@@ -43,6 +54,8 @@ import {
 } from '../components/styledComponents';
 import useWallet from '../hooks/useWallet';
 import useAlertMessage from '../hooks/useAlertMessage';
+import useLoading from '../hooks/useLoading';
+import { thousandsSeparators } from '../utils/functions';
 
 /* --------------------------------------------------------------------------- */
 
@@ -55,20 +68,27 @@ export default function Home() {
     currentAccount,
     connectWallet,
     disconnectWallet,
-    contract
+    contract,
+    signer
   } = useWallet();
   const { openAlert } = useAlertMessage();
-  const [buyPrice, setBuyPrice] = useState('0');
-  const [rate, setRate] = useState(0);
-  const [minBuyPrice, setMinBuyPrice] = useState(-1);
-  const [maxBuyPrice, setMaxBuyPrice] = useState(-1);
+  const { openLoading, closeLoading } = useLoading();
 
+  const [busdContract, setBusdContract] = useState(INIT_BUSD_CONTRACT);
+  const [buyPrice, setBuyPrice] = useState(INIT_BUY_PRICE);
+  const [rate, setRate] = useState(INIT_EXCHANGE_RATE);
+  const [minBuyPrice, setMinBuyPrice] = useState(1 / INIT_EXCHANGE_RATE);
+  const [maxBuyPrice, setMaxBuyPrice] = useState(INIT_MAX_BUY_PRICE);
+  const [soldAmount, setSoldAmount] = useState(INIT_SOLD_AMOUNT);
+
+  //  Set the amount of busd to buy token
   const handleBuyPrice = (value) => {
     if (value.match(REGEX_NUMBER_VALID)) {
       setBuyPrice(value);
     }
   };
 
+  //  Buy token
   const handleApprove = async () => {
     try {
       if (Number(buyPrice) < minBuyPrice) {
@@ -83,12 +103,23 @@ export default function Home() {
           message: MESSAGE_BIGGER_THAN_MAX_PRICE
         });
       }
-      await contract.buyTokens({ value: ethers.utils.parseEther(buyPrice) });
+      // await contract.buyTokens({ value: ethers.utils.parseEther(buyPrice) });
+      const transaction = await busdContract.transfer(
+        CONTRACT_ADDRESS,
+        BigNumber.from(ethers.utils.parseEther(buyPrice)),
+        { from: currentAccount }
+      );
+      await transaction.wait();
+
+      let balanceOfContract = await busdContract.balanceOf(CONTRACT_ADDRESS);
+      setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
+
       return openAlert({
         severity: SUCCESS,
         message: MESSAGE_TRANSACTION_SUCCESS
       });
     } catch (error) {
+      console.log('# error => ', error);
       if (error.code === 4001) {
         return openAlert({
           severity: ERROR,
@@ -100,29 +131,50 @@ export default function Home() {
           message: MESSAGE_BALANCE_NOT_ENOUGH
         });
       }
+      return openAlert({
+        severity: ERROR,
+        message: MESSAGE_ERROR
+      });
     }
   };
 
+  // Disconnect wallet
   const handleDisconnectWallet = () => {
-    setBuyPrice('0');
-    setRate(0);
-    setMinBuyPrice(-1);
-    setMaxBuyPrice(-1);
+    setBusdContract(INIT_BUSD_CONTRACT);
+    setBuyPrice(INIT_BUY_PRICE);
+    setRate(INIT_EXCHANGE_RATE);
+    setMinBuyPrice(1 / INIT_EXCHANGE_RATE);
+    setMaxBuyPrice(INIT_MAX_BUY_PRICE);
+    setSoldAmount(INIT_SOLD_AMOUNT);
+
     disconnectWallet();
   };
 
+  //  Fetch the exchange rate, min buy price and max buy price
   useEffect(() => {
     if (currentAccount) {
       if (contract) {
         (async () => {
           try {
-            const presaleRate = await contract.presaleRate();
-            const minPurchase = await contract.minPurchase();
-            const maxPurchase = await contract.maxPurchase();
+            openLoading();
 
-            setRate(parseInt(presaleRate._hex));
-            setMinBuyPrice(parseInt(minPurchase._hex) / 10 ** 18);
+            // const presaleRate = await contract.presaleRate();
+            // let minPurchase = await contract.minPurchase();
+            let maxPurchase = await contract.maxPurchase();
+            let _busdContract = new ethers.Contract(
+              CONTRACT_ADDRESS_BUSD,
+              CONTRACT_ABI_BUSD,
+              signer
+            );
+            let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
+
+            // setRate(parseInt(presaleRate._hex));
+            // setMinBuyPrice(parseInt(minPurchase._hex) / 10 ** 18);
             setMaxBuyPrice(parseInt(maxPurchase._hex) / 10 ** 18);
+            setBusdContract(_busdContract);
+            setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
+
+            closeLoading();
           } catch (error) {
             console.log('# error => ', error);
           }
@@ -130,8 +182,6 @@ export default function Home() {
       }
     }
   }, [currentAccount]);
-
-
 
   return (
     <Container maxWidth="lg" sx={{ py: 3 }}>
@@ -207,18 +257,26 @@ export default function Home() {
                     fontSize={{ xs: FONT_SIZE_BODY1_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                     fontFamily={FONT_FAMILY_SECONDARY}
                     fontWeight={900}
-                  >Sold: 9,081,576.95 {NAME_TO_CRYPTO}</Typography>
+                  >
+                    Sold:&nbsp;
+                    {
+                      soldAmount >= 0 && (
+                        `${thousandsSeparators(Number(soldAmount.toFixed(5)) * rate)} ${NAME_TO_CRYPTO}`
+                      )
+                    }
+
+                  </Typography>
                   <Typography
                     component="span"
                     fontSize={{ xs: FONT_SIZE_BODY1_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                     fontFamily={FONT_FAMILY_SECONDARY}
                     fontWeight={900}
-                  >Hard Cap: 20,000,000.00 {NAME_TO_CRYPTO}</Typography>
+                  >Hard Cap: {thousandsSeparators(HARD_CAP * rate)} {NAME_TO_CRYPTO}</Typography>
                 </Stack>
 
                 <PrimaryLinearProgressbar
                   variant="determinate"
-                  value={40}
+                  value={soldAmount >= 0 ? (soldAmount / HARD_CAP) * 100 : 0}
                 />
               </Stack>
 

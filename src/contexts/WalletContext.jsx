@@ -18,7 +18,6 @@ import { AlertMessageContext } from './AlertMessageContext';
 
 const initialState = {
   currentAccount: '',
-  balance: 0,
   provider: null,
   signer: null,
   contract: null
@@ -41,6 +40,12 @@ const handlers = {
     return {
       ...state,
       contract: action.payload
+    };
+  },
+  SET_SIGNER: (state, action) => {
+    return {
+      ...state,
+      signer: action.payload
     };
   }
 };
@@ -107,6 +112,11 @@ function WalletProvider({ children }) {
           type: 'SET_CONTRACT',
           payload: contract
         });
+
+        dispatch({
+          type: 'SET_SIGNER',
+          payload: signer
+        });
       } else {
         if (window.ethereum) {
           try {
@@ -162,6 +172,11 @@ function WalletProvider({ children }) {
         payload: null
       });
 
+      dispatch({
+        type: 'SET_SIGNER',
+        payload: null
+      });
+
       openAlert({
         severity: ERROR,
         message: MESSAGE_WALLET_CONNECT_ERROR
@@ -183,6 +198,11 @@ function WalletProvider({ children }) {
 
     dispatch({
       type: 'SET_CONTRACT',
+      payload: null
+    });
+
+    dispatch({
+      type: 'SET_SIGNER',
       payload: null
     });
   };
