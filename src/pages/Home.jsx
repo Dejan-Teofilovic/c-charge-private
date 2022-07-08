@@ -270,7 +270,7 @@ export default function Home() {
                     Sold:&nbsp;
                     {
                       soldAmount >= 0 && (
-                        `${thousandsSeparators(Number(soldAmount.toFixed(5)) * rate)} ${NAME_TO_CRYPTO}`
+                        `${thousandsSeparators(Number(soldAmount.toFixed(2)))} ${NAME_FROM_CRYPTO}`
                       )
                     }
 
@@ -280,7 +280,7 @@ export default function Home() {
                     fontSize={{ xs: FONT_SIZE_BODY1_MOBILE, md: FONT_SIZE_H6_DESKTOP }}
                     fontFamily={FONT_FAMILY_SECONDARY}
                     fontWeight={900}
-                  >Hard Cap: {thousandsSeparators(HARD_CAP * rate)} {NAME_TO_CRYPTO}</Typography>
+                  >Hard Cap: {thousandsSeparators(HARD_CAP)} {NAME_FROM_CRYPTO}</Typography>
                 </Stack>
 
                 <PrimaryLinearProgressbar
@@ -389,6 +389,7 @@ export default function Home() {
                   {/* Exchange */}
                   <Grid item xs={12} md={6}>
                     <Stack sx={{ height: '100%' }} justifyContent="center" spacing={2}>
+                      {/* From */}
                       <Stack
                         spacing={1}
                         px={2}
@@ -446,7 +447,7 @@ export default function Home() {
                         </MuiIcon>
                       </Stack>
 
-                      {/* CCharge */}
+                      {/* To */}
                       <Stack
                         spacing={1}
                         px={2}

@@ -40,7 +40,7 @@ export const NAME_TO_CRYPTO = 'EVO';
 export const CODE_SWITCH_ERROR = 4902;
 
 export const INIT_EXCHANGE_RATE = 200;
-export const INIT_MIN_BUY_PRICE = 250;
+export const INIT_MIN_BUY_PRICE = 0.1;
 export const INIT_MAX_BUY_PRICE = 2500;
 export const INIT_SOLD_AMOUNT = -1;
 export const INIT_BUSD_CONTRACT = null;
