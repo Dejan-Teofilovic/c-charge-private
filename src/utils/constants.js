@@ -30,15 +30,6 @@ export const CONTRACT_ABI_BUSD = [{ "inputs": [], "payable": false, "stateMutabi
 
 export const WALLET_CONNECT_INFURA_ID = '8cf3cad623da43f9a84ab5ac94230cf6';
 
-export const MESSAGE_WALLET_CONNECT_ERROR = 'Wallet connect error. Try again, please.';
-export const MESSAGE_SWITCH_NETWORK = 'Please switch the network to Binance Smart Chain.';
-export const MESSAGE_SMALLER_THAN_MIN_PRICE = 'The value of BNB must be same or over 0.001.';
-export const MESSAGE_BIGGER_THAN_MAX_PRICE = 'The value of BNB must be same or lower than 3.';
-export const MESSAGE_BALANCE_NOT_ENOUGH = "The balance of your wallet isn't enough to buy the token.";
-export const MESSAGE_TRANSACTION_SUCCESS = 'The transaction is succeed.';
-export const MESSAGE_TRANSACTION_REJECTED = 'The transaction is rejected.';
-export const MESSAGE_ERROR = 'Something is wrong. Try again in a few min, please.';
-
 export const SUCCESS = 'success';
 export const WARNING = 'warning';
 export const ERROR = 'error';
@@ -49,9 +40,19 @@ export const NAME_TO_CRYPTO = 'EVO';
 export const CODE_SWITCH_ERROR = 4902;
 
 export const INIT_EXCHANGE_RATE = 200;
-export const INIT_MAX_BUY_PRICE = -1;
+export const INIT_MIN_BUY_PRICE = 250;
+export const INIT_MAX_BUY_PRICE = 2500;
 export const INIT_SOLD_AMOUNT = -1;
 export const INIT_BUSD_CONTRACT = null;
 export const INIT_BUY_PRICE = '0';
 
 export const HARD_CAP = 50000;
+
+export const MESSAGE_WALLET_CONNECT_ERROR = 'Wallet connect error. Try again, please.';
+export const MESSAGE_SWITCH_NETWORK = 'Please switch the network to Binance Smart Chain.';
+export const MESSAGE_SMALLER_THAN_MIN_PRICE = `The value of BNB must be same or over ${INIT_MIN_BUY_PRICE}.`;
+export const MESSAGE_BIGGER_THAN_MAX_PRICE = `The value of BNB must be same or lower than ${INIT_MAX_BUY_PRICE}.`;
+export const MESSAGE_BALANCE_NOT_ENOUGH = "The balance of your wallet isn't enough to buy the token.";
+export const MESSAGE_TRANSACTION_SUCCESS = 'The transaction is succeed.';
+export const MESSAGE_TRANSACTION_REJECTED = 'The transaction is rejected.';
+export const MESSAGE_ERROR = 'Something is wrong. Try again in a few min, please.';

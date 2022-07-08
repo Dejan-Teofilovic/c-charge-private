@@ -35,6 +35,7 @@ import {
   INIT_BUY_PRICE,
   INIT_EXCHANGE_RATE,
   INIT_MAX_BUY_PRICE,
+  INIT_MIN_BUY_PRICE,
   INIT_SOLD_AMOUNT,
   MESSAGE_BALANCE_NOT_ENOUGH,
   MESSAGE_BIGGER_THAN_MAX_PRICE,
@@ -77,7 +78,7 @@ export default function Home() {
   const [busdContract, setBusdContract] = useState(INIT_BUSD_CONTRACT);
   const [buyPrice, setBuyPrice] = useState(INIT_BUY_PRICE);
   const [rate, setRate] = useState(INIT_EXCHANGE_RATE);
-  const [minBuyPrice, setMinBuyPrice] = useState(1 / INIT_EXCHANGE_RATE);
+  const [minBuyPrice, setMinBuyPrice] = useState(INIT_MIN_BUY_PRICE);
   const [maxBuyPrice, setMaxBuyPrice] = useState(INIT_MAX_BUY_PRICE);
   const [soldAmount, setSoldAmount] = useState(INIT_SOLD_AMOUNT);
 
@@ -150,7 +151,7 @@ export default function Home() {
     setBusdContract(INIT_BUSD_CONTRACT);
     setBuyPrice(INIT_BUY_PRICE);
     setRate(INIT_EXCHANGE_RATE);
-    setMinBuyPrice(1 / INIT_EXCHANGE_RATE);
+    setMinBuyPrice(INIT_MIN_BUY_PRICE);
     setMaxBuyPrice(INIT_MAX_BUY_PRICE);
     setSoldAmount(INIT_SOLD_AMOUNT);
 
@@ -167,7 +168,7 @@ export default function Home() {
 
             // const presaleRate = await contract.presaleRate();
             // let minPurchase = await contract.minPurchase();
-            let maxPurchase = await contract.maxPurchase();
+            // let maxPurchase = await contract.maxPurchase();
             let _busdContract = new ethers.Contract(
               CONTRACT_ADDRESS_BUSD,
               CONTRACT_ABI_BUSD,
@@ -177,7 +178,7 @@ export default function Home() {
 
             // setRate(parseInt(presaleRate._hex));
             // setMinBuyPrice(parseInt(minPurchase._hex) / 10 ** 18);
-            setMaxBuyPrice(parseInt(maxPurchase._hex) / 10 ** 18);
+            // setMaxBuyPrice(parseInt(maxPurchase._hex) / 10 ** 18);
             setBusdContract(_busdContract);
             setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
 
@@ -378,7 +379,7 @@ export default function Home() {
                               fontSize={{ xs: FONT_SIZE_H5_MOBILE, md: FONT_SIZE_H5_DESKTOP }}
                               fontFamily={FONT_FAMILY_SECONDARY}
                               fontWeight={900}
-                            >{maxBuyPrice} {NAME_FROM_CRYPTO}</Typography>
+                            >{thousandsSeparators(maxBuyPrice)} {NAME_FROM_CRYPTO}</Typography>
                           )
                         }
                       </Stack>
