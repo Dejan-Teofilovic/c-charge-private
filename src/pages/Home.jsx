@@ -290,7 +290,7 @@ export default function Home() {
 
               <Box mt={4}>
                 <Grid container spacing={2} alignItems="stretch">
-                  {/* Current status */}
+                  {/* Prices */}
                   <Grid item xs={12} md={6}>
                     <Stack
                       px={3}
@@ -388,7 +388,6 @@ export default function Home() {
                   {/* Exchange */}
                   <Grid item xs={12} md={6}>
                     <Stack sx={{ height: '100%' }} justifyContent="center" spacing={2}>
-                      {/* {NAME_FROM_CRYPTO} */}
                       <Stack
                         spacing={1}
                         px={2}
@@ -423,7 +422,7 @@ export default function Home() {
                               >
                                 <Box
                                   component="img"
-                                  src="assets/images/bnb.png"
+                                  src="assets/images/from-crypto.png"
                                   alt=""
                                   width={{ xs: 20, md: 40 }}
                                 />
