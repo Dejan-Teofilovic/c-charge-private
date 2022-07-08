@@ -91,6 +91,7 @@ export default function Home() {
   //  Buy token
   const handleApprove = async () => {
     try {
+
       if (Number(buyPrice) < minBuyPrice) {
         return openAlert({
           severity: WARNING,
@@ -104,6 +105,8 @@ export default function Home() {
         });
       }
       // await contract.buyTokens({ value: ethers.utils.parseEther(buyPrice) });
+      openLoading();
+
       const transaction = await busdContract.transfer(
         CONTRACT_ADDRESS,
         BigNumber.from(ethers.utils.parseEther(buyPrice)),
@@ -114,12 +117,16 @@ export default function Home() {
       let balanceOfContract = await busdContract.balanceOf(CONTRACT_ADDRESS);
       setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
 
+      closeLoading();
+
       return openAlert({
         severity: SUCCESS,
         message: MESSAGE_TRANSACTION_SUCCESS
       });
+
     } catch (error) {
       console.log('# error => ', error);
+      closeLoading();
       if (error.code === 4001) {
         return openAlert({
           severity: ERROR,
@@ -177,6 +184,7 @@ export default function Home() {
             closeLoading();
           } catch (error) {
             console.log('# error => ', error);
+            closeLoading();
           }
         })();
       }
