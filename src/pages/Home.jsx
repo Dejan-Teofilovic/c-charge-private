@@ -40,6 +40,7 @@ import {
   MESSAGE_BALANCE_NOT_ENOUGH,
   MESSAGE_BIGGER_THAN_MAX_PRICE,
   MESSAGE_ERROR,
+  MESSAGE_OVERFLOW,
   MESSAGE_SMALLER_THAN_MIN_PRICE,
   MESSAGE_TRANSACTION_REJECTED,
   MESSAGE_TRANSACTION_SUCCESS,
@@ -92,7 +93,12 @@ export default function Home() {
   //  Buy token
   const handleApprove = async () => {
     try {
-
+      if (soldAmount + Number(buyPrice) > HARD_CAP) {
+        return openAlert({
+          severity: WARNING,
+          message: `${MESSAGE_OVERFLOW} ${(HARD_CAP - soldAmount).toFixed(3)} ${NAME_FROM_CRYPTO} max.`
+        });
+      }
       if (Number(buyPrice) < minBuyPrice) {
         return openAlert({
           severity: WARNING,
@@ -126,7 +132,6 @@ export default function Home() {
       });
 
     } catch (error) {
-      console.log('# error => ', error);
       closeLoading();
       if (error.code === 4001) {
         return openAlert({
@@ -166,9 +171,6 @@ export default function Home() {
           try {
             openLoading();
 
-            // const presaleRate = await contract.presaleRate();
-            // let minPurchase = await contract.minPurchase();
-            // let maxPurchase = await contract.maxPurchase();
             let _busdContract = new ethers.Contract(
               CONTRACT_ADDRESS_BUSD,
               CONTRACT_ABI_BUSD,
@@ -176,15 +178,11 @@ export default function Home() {
             );
             let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
 
-            // setRate(parseInt(presaleRate._hex));
-            // setMinBuyPrice(parseInt(minPurchase._hex) / 10 ** 18);
-            // setMaxBuyPrice(parseInt(maxPurchase._hex) / 10 ** 18);
             setBusdContract(_busdContract);
             setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
 
             closeLoading();
           } catch (error) {
-            console.log('# error => ', error);
             closeLoading();
           }
         })();
@@ -511,7 +509,7 @@ export default function Home() {
                   }}
                   variant="contained"
                   onClick={handleApprove}
-                  disabled={!currentAccount}
+                  disabled={!currentAccount || soldAmount >= HARD_CAP}
                 >
                   Approve
                 </PrimaryButton>

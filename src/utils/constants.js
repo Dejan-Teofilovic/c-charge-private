@@ -56,3 +56,4 @@ export const MESSAGE_BALANCE_NOT_ENOUGH = "The balance of your wallet isn't enou
 export const MESSAGE_TRANSACTION_SUCCESS = 'The transaction is succeed.';
 export const MESSAGE_TRANSACTION_REJECTED = 'The transaction is rejected.';
 export const MESSAGE_ERROR = 'Something is wrong. Try again in a few min, please.';
+export const MESSAGE_OVERFLOW = 'You can invest';
