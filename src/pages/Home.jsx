@@ -16,8 +16,10 @@ import { BigNumber } from 'ethers/lib/ethers';
 import {
   COLOR_PRIMARY,
   COLOR_PRIMARY_OPACITY,
+  CONTRACT_ABI_BRIDGE,
   CONTRACT_ABI_BUSD,
   CONTRACT_ADDRESS,
+  CONTRACT_ADDRESS_BRIDGE,
   CONTRACT_ADDRESS_BUSD,
   ERROR,
   FONT_FAMILY_PRIMARY,
@@ -77,6 +79,7 @@ export default function Home() {
   const { openLoading, closeLoading } = useLoading();
 
   const [busdContract, setBusdContract] = useState(INIT_BUSD_CONTRACT);
+  const [bridgeContract, setBridgeContract] = useState(INIT_BUSD_CONTRACT);
   const [buyPrice, setBuyPrice] = useState(INIT_BUY_PRICE);
   const [rate, setRate] = useState(INIT_EXCHANGE_RATE);
   const [minBuyPrice, setMinBuyPrice] = useState(INIT_MIN_BUY_PRICE);
@@ -114,10 +117,24 @@ export default function Home() {
       // await contract.buyTokens({ value: ethers.utils.parseEther(buyPrice) });
       openLoading();
 
-      const transaction = await busdContract.transfer(
+      // const transaction = await busdContract.transfer(
+      //   CONTRACT_ADDRESS,
+      //   ethers.utils.parseEther(buyPrice),
+      //   { from: currentAccount }
+      // );
+      // console.log('>>>>>>>> busdContract => ', busdContract);
+      // console.log('>>>>>>>> bridgeContract => ', bridgeContract);
+      // console.log('>>>>>> ethers.utils.parseEther(buyPrice) => ', ethers.utils.parseEther(buyPrice))
+
+      const approveTransaction = await busdContract.approve(
+        CONTRACT_ADDRESS_BRIDGE,
+        ethers.utils.parseEther(buyPrice)
+      );
+      await approveTransaction.wait();
+
+      const transaction = await bridgeContract.presale(
         CONTRACT_ADDRESS,
-        BigNumber.from(ethers.utils.parseEther(buyPrice)),
-        { from: currentAccount }
+        ethers.utils.parseEther(buyPrice)
       );
       await transaction.wait();
 
@@ -132,6 +149,7 @@ export default function Home() {
       });
 
     } catch (error) {
+      console.log('>>>>>>>> error => ', error);
       closeLoading();
       if (error.code === 4001) {
         return openAlert({
@@ -176,9 +194,15 @@ export default function Home() {
               CONTRACT_ABI_BUSD,
               signer
             );
+            let _bridgeContract = new ethers.Contract(
+              CONTRACT_ADDRESS_BRIDGE,
+              CONTRACT_ABI_BRIDGE,
+              signer
+            );
             let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
 
             setBusdContract(_busdContract);
+            setBridgeContract(_bridgeContract);
             setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
 
             closeLoading();
