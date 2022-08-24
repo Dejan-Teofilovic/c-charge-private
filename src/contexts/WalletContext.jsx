@@ -207,7 +207,7 @@ function WalletProvider({ children }) {
       }
     });
     let onboard = Onboard({
-      wallets: [walletConnect, ...injected],
+      wallets: [walletConnect, injected],
       chains: [
         {
           id: '0x38',
