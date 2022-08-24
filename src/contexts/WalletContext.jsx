@@ -69,14 +69,14 @@ function WalletProvider({ children }) {
   const getWeb3Modal = async () => {
     const web3Modal = new Web3Modal({
       network: 'mainnet',
-      cacheProvider: false,
+      cacheProvider: true,
       providerOptions: {
         walletconnect: {
           package: WalletConnectProvider,
           options: {
             infuraId: WALLET_CONNECT_INFURA_ID,
             rpc: {
-              56: 'https://bsc-dataseed1.binance.org'
+              56: 'https://bsc-dataseed1.binance.org/'
             },
             chainId: CHAIN_ID
           },
