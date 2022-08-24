@@ -98,6 +98,7 @@ function WalletProvider({ children }) {
       // if (chainId === CHAIN_ID) {
         accounts = await provider.listAccounts();
         signer = await provider.getSigner();
+        console.log('>>>>>> signer => ', signer);
         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
         console.log('>>>>> contract => ', contract);
 
