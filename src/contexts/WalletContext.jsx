@@ -3,6 +3,7 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Onboard from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
+import walletConnectModule from '@web3-onboard/walletconnect'
 import { ethers } from 'ethers';
 import {
   CHAIN_ID,
