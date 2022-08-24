@@ -163,6 +163,7 @@ function WalletProvider({ children }) {
       }
       /* ---------------------------------------------- */
     } catch (error) {
+      console.log('>>>>> error => ', error);
       dispatch({
         type: 'SET_CURRENT_ACCOUNT',
         payload: ''
