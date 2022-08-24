@@ -199,9 +199,11 @@ export default function Home() {
             CONTRACT_ABI_BRIDGE,
             signer
           );
-          let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
+
           console.log('>>>>>>> _busdContract => ', _busdContract);
           console.log('>>>>>>> _bridgeContract => ', _bridgeContract);
+
+          let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
 
           setBusdContract(_busdContract);
           setBridgeContract(_bridgeContract);
