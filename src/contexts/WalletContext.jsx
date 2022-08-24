@@ -11,6 +11,7 @@ import {
   MESSAGE_SWITCH_NETWORK,
   MESSAGE_WALLET_CONNECT_ERROR,
   WALLET_CONNECT_INFURA_ID,
+  WARNING,
 } from '../utils/constants';
 import { AlertMessageContext } from './AlertMessageContext';
 
