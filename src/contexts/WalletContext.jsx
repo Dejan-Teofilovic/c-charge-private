@@ -199,8 +199,14 @@ function WalletProvider({ children }) {
 
   const connectWallet = async () => {
     let injected = injectedModule();
+    let walletConnect = walletConnectModule({
+      bridge: 'https://bridge.walletconnect.org',
+      qrcodeModalOptions: {
+        mobileLinks: []
+      }
+    });
     let onboard = Onboard({
-      wallets: [injected],
+      wallets: [walletConnect, ...injected],
       chains: [
         {
           id: '0x38',
