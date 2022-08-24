@@ -184,38 +184,38 @@ export default function Home() {
   //  Fetch the exchange rate, min buy price and max buy price
   useEffect(() => {
     if (currentAccount) {
-      // if (contract) {
-      (async () => {
-        try {
-          openLoading();
+      if (contract) {
+        (async () => {
+          try {
+            openLoading();
 
-          let _busdContract = new ethers.Contract(
-            CONTRACT_ADDRESS_BUSD,
-            CONTRACT_ABI_BUSD,
-            signer
-          );
-          let _bridgeContract = new ethers.Contract(
-            CONTRACT_ADDRESS_BRIDGE,
-            CONTRACT_ABI_BRIDGE,
-            signer
-          );
+            let _busdContract = new ethers.Contract(
+              CONTRACT_ADDRESS_BUSD,
+              CONTRACT_ABI_BUSD,
+              signer
+            );
+            let _bridgeContract = new ethers.Contract(
+              CONTRACT_ADDRESS_BRIDGE,
+              CONTRACT_ABI_BRIDGE,
+              signer
+            );
 
-          console.log('>>>>>>> _busdContract => ', _busdContract);
-          console.log('>>>>>>> _bridgeContract => ', _bridgeContract);
+            console.log('>>>>>>> _busdContract => ', _busdContract);
+            console.log('>>>>>>> _bridgeContract => ', _bridgeContract);
 
-          let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
+            let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
 
-          setBusdContract(_busdContract);
-          setBridgeContract(_bridgeContract);
-          setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
+            setBusdContract(_busdContract);
+            setBridgeContract(_bridgeContract);
+            setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
 
-          closeLoading();
-        } catch (error) {
-          console.log('>>>>>> error => ', error);
-          closeLoading();
-        }
-      })();
-      // }
+            closeLoading();
+          } catch (error) {
+            console.log('>>>>>> error => ', error);
+            closeLoading();
+          }
+        })();
+      }
     }
   }, [currentAccount]);
 
