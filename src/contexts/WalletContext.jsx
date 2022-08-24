@@ -74,7 +74,11 @@ function WalletProvider({ children }) {
         walletconnect: {
           package: WalletConnectProvider,
           options: {
-            infuraId: WALLET_CONNECT_INFURA_ID
+            infuraId: WALLET_CONNECT_INFURA_ID,
+            rpc: {
+              56: 'https://bsc-dataseed1.binance.org'
+            },
+            chainId: CHAIN_ID
           },
         },
       }
@@ -122,42 +126,42 @@ function WalletProvider({ children }) {
           payload: signer
         });
       // } else {
-      //   // if (window.ethereum) {
-      //   //   try {
-      //   //     await window.ethereum.request({
-      //   //       method: 'wallet_switchEthereumChain',
-      //   //       params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }],
-      //   //     });
-      //   //   } catch (error) {
-      //   //     if (error.code === CODE_SWITCH_ERROR) {
-      //   //       /* ------------ Add new chain ------------- */
-      //   //       await window.ethereum.request({
-      //   //         method: 'wallet_addEthereumChain',
-      //   //         params: [
-      //   //           {
-      //   //             chainId: `0x${CHAIN_ID.toString(16)}`,
-      //   //             chainName: CHAIN_NAME,
-      //   //             rpcUrls: RPC_URLS,
-      //   //             blockExplorerUrls: BLOCK_EXPLORER_URLS,
-      //   //             nativeCurrency: {
-      //   //               name: NATIVE_CURRENCY_NAME,
-      //   //               symbol: NATIVE_CURRENCY_SYMBOL, // 2-6 characters length
-      //   //               decimals: DECIMALS,
-      //   //             }
-      //   //           },
-      //   //         ],
-      //   //       });
-      //   //       /* ---------------------------------------- */
-      //   //     } else {
-      //   //       throw error;
-      //   //     }
-      //   //   }
-      //   // } else {
-      //   //   openAlert({
-      //   //     severity: ERROR,
-      //   //     message: MESSAGE_SWITCH_NETWORK
-      //   //   });
-      //   // }
+        // if (window.ethereum) {
+        //   try {
+        //     await window.ethereum.request({
+        //       method: 'wallet_switchEthereumChain',
+        //       params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }],
+        //     });
+        //   } catch (error) {
+        //     if (error.code === CODE_SWITCH_ERROR) {
+        //       /* ------------ Add new chain ------------- */
+        //       await window.ethereum.request({
+        //         method: 'wallet_addEthereumChain',
+        //         params: [
+        //           {
+        //             chainId: `0x${CHAIN_ID.toString(16)}`,
+        //             chainName: CHAIN_NAME,
+        //             rpcUrls: RPC_URLS,
+        //             blockExplorerUrls: BLOCK_EXPLORER_URLS,
+        //             nativeCurrency: {
+        //               name: NATIVE_CURRENCY_NAME,
+        //               symbol: NATIVE_CURRENCY_SYMBOL, // 2-6 characters length
+        //               decimals: DECIMALS,
+        //             }
+        //           },
+        //         ],
+        //       });
+        //       /* ---------------------------------------- */
+        //     } else {
+        //       throw error;
+        //     }
+        //   }
+        // } else {
+        //   openAlert({
+        //     severity: ERROR,
+        //     message: MESSAGE_SWITCH_NETWORK
+        //   });
+        // }
       //   openAlert({
       //     severity: WARNING,
       //     message: MESSAGE_SWITCH_NETWORK
