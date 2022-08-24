@@ -151,7 +151,7 @@ export const CONTRACT_ABI_BRIDGE = [
   }
 ];
 
-export const WALLET_CONNECT_INFURA_ID = '8cf3cad623da43f9a84ab5ac94230cf6';
+export const WALLET_CONNECT_INFURA_ID = '27e484dcd9e3efcfd25a83a78777cdf1';
 
 export const SUCCESS = 'success';
 export const WARNING = 'warning';
