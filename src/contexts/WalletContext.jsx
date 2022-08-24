@@ -98,11 +98,11 @@ function WalletProvider({ children }) {
       // regular web3 provider methods
       const newWeb3 = new Web3(connection);
       let accounts = await newWeb3.eth.getAccounts();
-      console.log('>>>>>> newWeb3.eth => ', newWeb3.eth);
+      const chainId = await newWeb3.eth.getChainId();
+      console.log('>>>> newWeb3.eth => ', newWeb3.eth);
 
       let signer = null;
       let contract = null;
-      const { chainId } = await provider.getNetwork();
       console.log('>>>>>> chainId => ', chainId);
 
       /* --------------- Switch network --------------- */
