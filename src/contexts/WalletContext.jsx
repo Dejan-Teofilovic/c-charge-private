@@ -91,12 +91,14 @@ function WalletProvider({ children }) {
       let signer = null;
       let contract = null;
       const { chainId } = await provider.getNetwork();
+      console.log('>>>>>> chainId => ', chainId);
 
       /* --------------- Switch network --------------- */
       if (chainId === CHAIN_ID) {
         accounts = await provider.listAccounts();
         signer = await provider.getSigner();
         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+        console.log('>>>>> contract => ', contract);
 
         dispatch({
           type: 'SET_CURRENT_ACCOUNT',
@@ -118,42 +120,46 @@ function WalletProvider({ children }) {
           payload: signer
         });
       } else {
-        if (window.ethereum) {
-          try {
-            await window.ethereum.request({
-              method: 'wallet_switchEthereumChain',
-              params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }],
-            });
-          } catch (error) {
-            if (error.code === CODE_SWITCH_ERROR) {
-              /* ------------ Add new chain ------------- */
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [
-                  {
-                    chainId: `0x${CHAIN_ID.toString(16)}`,
-                    chainName: CHAIN_NAME,
-                    rpcUrls: RPC_URLS,
-                    blockExplorerUrls: BLOCK_EXPLORER_URLS,
-                    nativeCurrency: {
-                      name: NATIVE_CURRENCY_NAME,
-                      symbol: NATIVE_CURRENCY_SYMBOL, // 2-6 characters length
-                      decimals: DECIMALS,
-                    }
-                  },
-                ],
-              });
-              /* ---------------------------------------- */
-            } else {
-              throw error;
-            }
-          }
-        } else {
-          openAlert({
-            severity: ERROR,
-            message: MESSAGE_SWITCH_NETWORK
-          });
-        }
+        // if (window.ethereum) {
+        //   try {
+        //     await window.ethereum.request({
+        //       method: 'wallet_switchEthereumChain',
+        //       params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }],
+        //     });
+        //   } catch (error) {
+        //     if (error.code === CODE_SWITCH_ERROR) {
+        //       /* ------------ Add new chain ------------- */
+        //       await window.ethereum.request({
+        //         method: 'wallet_addEthereumChain',
+        //         params: [
+        //           {
+        //             chainId: `0x${CHAIN_ID.toString(16)}`,
+        //             chainName: CHAIN_NAME,
+        //             rpcUrls: RPC_URLS,
+        //             blockExplorerUrls: BLOCK_EXPLORER_URLS,
+        //             nativeCurrency: {
+        //               name: NATIVE_CURRENCY_NAME,
+        //               symbol: NATIVE_CURRENCY_SYMBOL, // 2-6 characters length
+        //               decimals: DECIMALS,
+        //             }
+        //           },
+        //         ],
+        //       });
+        //       /* ---------------------------------------- */
+        //     } else {
+        //       throw error;
+        //     }
+        //   }
+        // } else {
+        //   openAlert({
+        //     severity: ERROR,
+        //     message: MESSAGE_SWITCH_NETWORK
+        //   });
+        // }
+        openAlert({
+          severity: WARNING,
+          message: MESSAGE_SWITCH_NETWORK
+        });
       }
       /* ---------------------------------------------- */
     } catch (error) {
