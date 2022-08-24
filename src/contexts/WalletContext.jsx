@@ -92,6 +92,7 @@ function WalletProvider({ children }) {
     try {
       const web3Modal = await getWeb3Modal();
       const connection = await web3Modal.connect();
+      console.log('>>>> connection => ', connection);
       const provider = new ethers.providers.Web3Provider(connection);
       await web3Modal.toggleModal();
 
