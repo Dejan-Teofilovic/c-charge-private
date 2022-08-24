@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
+import Onboard from '@web3-onboard/core';
+import injectedModule from '@web3-onboard/injected-wallets';
 import { ethers } from 'ethers';
-import Web3 from 'web3';
 import {
   CHAIN_ID,
   CODE_SWITCH_ERROR,
@@ -88,28 +89,148 @@ function WalletProvider({ children }) {
   };
 
   /** Connect wallet */
+  // const connectWallet = async () => {
+  //   try {
+  //     const web3Modal = await getWeb3Modal();
+  //     const connection = await web3Modal.connect();
+  //     const provider = new ethers.providers.Web3Provider(connection);
+  //     let accounts = null;
+  //     let signer = null;
+  //     let contract = null;
+  //     const { chainId } = await provider.getNetwork();
+  //     console.log('>>>>>> chainId => ', chainId);
+
+  //     /* --------------- Switch network --------------- */
+  //     if (chainId === CHAIN_ID) {
+  //       accounts = await provider.listAccounts();
+  //       signer = await provider.getSigner();
+  //       console.log('>>>>>> signer => ', signer);
+  //       contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+  //       console.log('>>>>> contract => ', contract);
+
+  //       dispatch({
+  //         type: 'SET_CURRENT_ACCOUNT',
+  //         payload: accounts[0]
+  //       });
+
+  //       dispatch({
+  //         type: 'SET_PROVIDER',
+  //         payload: provider
+  //       });
+
+  //       dispatch({
+  //         type: 'SET_CONTRACT',
+  //         payload: contract
+  //       });
+
+  //       dispatch({
+  //         type: 'SET_SIGNER',
+  //         payload: signer
+  //       });
+  //     } else {
+  //       if (window.ethereum) {
+  //         try {
+  //           await window.ethereum.request({
+  //             method: 'wallet_switchEthereumChain',
+  //             params: [{ chainId: `0x${CHAIN_ID.toString(16)}` }],
+  //           });
+  //         } catch (error) {
+  //           if (error.code === CODE_SWITCH_ERROR) {
+  //             /* ------------ Add new chain ------------- */
+  //             await window.ethereum.request({
+  //               method: 'wallet_addEthereumChain',
+  //               params: [
+  //                 {
+  //                   chainId: `0x${CHAIN_ID.toString(16)}`,
+  //                   chainName: CHAIN_NAME,
+  //                   rpcUrls: RPC_URLS,
+  //                   blockExplorerUrls: BLOCK_EXPLORER_URLS,
+  //                   nativeCurrency: {
+  //                     name: NATIVE_CURRENCY_NAME,
+  //                     symbol: NATIVE_CURRENCY_SYMBOL, // 2-6 characters length
+  //                     decimals: DECIMALS,
+  //                   }
+  //                 },
+  //               ],
+  //             });
+  //             /* ---------------------------------------- */
+  //           } else {
+  //             throw error;
+  //           }
+  //         }
+  //       } else {
+  //         openAlert({
+  //           severity: WARNING,
+  //           message: MESSAGE_SWITCH_NETWORK
+  //         });
+  //       }
+  //     }
+  //     /* ---------------------------------------------- */
+  //   } catch (error) {
+  //     console.log('>>>>> error => ', error);
+  //     dispatch({
+  //       type: 'SET_CURRENT_ACCOUNT',
+  //       payload: ''
+  //     });
+
+  //     dispatch({
+  //       type: 'SET_PROVIDER',
+  //       payload: null
+  //     });
+
+  //     dispatch({
+  //       type: 'SET_CONTRACT',
+  //       payload: null
+  //     });
+
+  //     dispatch({
+  //       type: 'SET_SIGNER',
+  //       payload: null
+  //     });
+
+  //     openAlert({
+  //       severity: ERROR,
+  //       message: MESSAGE_WALLET_CONNECT_ERROR
+  //     });
+  //   }
+  // };
+
+  //  blocknative use
+
   const connectWallet = async () => {
-    try {
-      const web3Modal = await getWeb3Modal();
-      const connection = await web3Modal.connect();
-      console.log('>>>> connection => ', connection);
-      const provider = new ethers.providers.Web3Provider(connection);
-      await web3Modal.toggleModal();
+    let injected = injectedModule();
+    let onboard = Onboard({
+      wallets: [injected],
+      chains: [
+        {
+          id: '0x38',
+          token: 'BNB',
+          label: 'Binance Smart Chain',
+          rpcUrl: `https://mainnet.infura.io/v3/${WALLET_CONNECT_INFURA_ID}`
+        }
+      ]
+    });
 
-      // regular web3 provider methods
-      const newWeb3 = new Web3(connection);
-      let accounts = await newWeb3.eth.getAccounts();
-      const chainId = await newWeb3.eth.getChainId();
-      console.log('>>>> newWeb3.eth => ', newWeb3.eth);
+    let wallets = await onboard.connectWallet();
+    console.log('>>>>>> wallets => ', wallets);
 
-      let signer = null;
+    if (wallets[0]) {
+      // create an ethers provider with the last connected wallet provider
+      const provider = new ethers.providers.Web3Provider(
+        wallets[0].provider,
+        'any'
+      );
+
+      const signer = await provider.getSigner();
+
+      let accounts = null;
       let contract = null;
+      const { chainId } = await provider.getNetwork();
       console.log('>>>>>> chainId => ', chainId);
 
       /* --------------- Switch network --------------- */
       if (chainId === CHAIN_ID) {
-        // accounts = await provider.listAccounts();
-        signer = await provider.getSigner();
+        accounts = await provider.listAccounts();
         console.log('>>>>>> signer => ', signer);
         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
         console.log('>>>>> contract => ', contract);
@@ -171,33 +292,6 @@ function WalletProvider({ children }) {
           });
         }
       }
-      /* ---------------------------------------------- */
-    } catch (error) {
-      console.log('>>>>> error => ', error);
-      dispatch({
-        type: 'SET_CURRENT_ACCOUNT',
-        payload: ''
-      });
-
-      dispatch({
-        type: 'SET_PROVIDER',
-        payload: null
-      });
-
-      dispatch({
-        type: 'SET_CONTRACT',
-        payload: null
-      });
-
-      dispatch({
-        type: 'SET_SIGNER',
-        payload: null
-      });
-
-      openAlert({
-        severity: ERROR,
-        message: MESSAGE_WALLET_CONNECT_ERROR
-      });
     }
   };
 
