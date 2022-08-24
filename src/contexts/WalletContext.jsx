@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer } from 'react';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { ethers } from 'ethers';
+import Web3 from 'web3';
 import {
   CHAIN_ID,
   CODE_SWITCH_ERROR,
@@ -92,7 +93,12 @@ function WalletProvider({ children }) {
       const web3Modal = await getWeb3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
-      let accounts = null;
+      await web3Modal.toggleModal();
+
+      // regular web3 provider methods
+      const newWeb3 = new Web3(connection);
+      let accounts = await newWeb3.eth.getAccounts();
+
       let signer = null;
       let contract = null;
       const { chainId } = await provider.getNetwork();
@@ -100,7 +106,7 @@ function WalletProvider({ children }) {
 
       /* --------------- Switch network --------------- */
       if (chainId === CHAIN_ID) {
-        accounts = await provider.listAccounts();
+        // accounts = await provider.listAccounts();
         signer = await provider.getSigner();
         console.log('>>>>>> signer => ', signer);
         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
