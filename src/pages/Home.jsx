@@ -126,6 +126,9 @@ export default function Home() {
       // console.log('>>>>>>>> bridgeContract => ', bridgeContract);
       // console.log('>>>>>> ethers.utils.parseEther(buyPrice) => ', ethers.utils.parseEther(buyPrice))
 
+      console.log('>>>>> busdContract => ', busdContract);
+      console.log('>>>>> bridgeContract => ', bridgeContract);
+
       const approveTransaction = await busdContract.approve(
         CONTRACT_ADDRESS_BRIDGE,
         ethers.utils.parseEther(buyPrice)
