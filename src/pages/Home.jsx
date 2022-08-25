@@ -188,16 +188,16 @@ export default function Home() {
         (async () => {
           try {
             openLoading();
-
+            console.log('>>>>> signer => ', signer);
             let _busdContract = new ethers.Contract(
               CONTRACT_ADDRESS_BUSD,
               CONTRACT_ABI_BUSD,
-              // signer
+              signer
             );
             let _bridgeContract = new ethers.Contract(
               CONTRACT_ADDRESS_BRIDGE,
               CONTRACT_ABI_BRIDGE,
-              // signer
+              signer
             );
 
             console.log('>>>>>>> _busdContract => ', _busdContract);
