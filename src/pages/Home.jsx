@@ -206,10 +206,11 @@ export default function Home() {
             console.log('>>>>>>> _busdContract => ', _busdContract);
             console.log('>>>>>>> _bridgeContract => ', _bridgeContract);
 
-            let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
-
             setBusdContract(_busdContract);
             setBridgeContract(_bridgeContract);
+
+            let balanceOfContract = await _busdContract.balanceOf(CONTRACT_ADDRESS);
+            
             setSoldAmount(parseInt(balanceOfContract._hex) / 10 ** 18);
 
             closeLoading();
