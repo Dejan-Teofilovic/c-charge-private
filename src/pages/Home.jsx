@@ -133,6 +133,8 @@ export default function Home() {
         CONTRACT_ADDRESS_BRIDGE,
         ethers.utils.parseEther(buyPrice)
       );
+
+      console.log('>>>>> approveTransaction => ', approveTransaction);
       await approveTransaction.wait();
 
       const transaction = await bridgeContract.presale(
