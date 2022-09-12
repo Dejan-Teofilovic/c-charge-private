@@ -3,7 +3,7 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import Onboard from '@web3-onboard/core';
 import injectedModule from '@web3-onboard/injected-wallets';
-import walletConnectModule from '@web3-onboard/walletconnect'
+import walletConnectModule from '@web3-onboard/walletconnect';
 import { ethers } from 'ethers';
 import {
   CHAIN_ID,
@@ -13,7 +13,6 @@ import {
   ERROR,
   MESSAGE_SWITCH_NETWORK,
   MESSAGE_WALLET_CONNECT_ERROR,
-  WALLET_CONNECT_INFURA_ID,
   WARNING,
 } from '../utils/constants';
 import { AlertMessageContext } from './AlertMessageContext';
@@ -77,7 +76,7 @@ function WalletProvider({ children }) {
         walletconnect: {
           package: WalletConnectProvider,
           options: {
-            infuraId: WALLET_CONNECT_INFURA_ID,
+            infuraId: process.env.REACT_APP_WALLET_CONNECT_INFURA_ID,
             rpc: {
               56: 'https://bsc-dataseed1.binance.org/'
             },
@@ -213,7 +212,7 @@ function WalletProvider({ children }) {
           id: '0x38',
           token: 'BNB',
           label: 'Binance Smart Chain',
-          rpcUrl: `https://mainnet.infura.io/v3/${WALLET_CONNECT_INFURA_ID}`
+          rpcUrl: `https://mainnet.infura.io/v3/${process.env.REACT_APP_WALLET_CONNECT_INFURA_ID}`
         }
       ]
     });
