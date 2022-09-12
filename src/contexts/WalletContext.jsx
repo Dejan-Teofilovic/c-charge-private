@@ -98,15 +98,12 @@ function WalletProvider({ children }) {
   //     let signer = null;
   //     let contract = null;
   //     const { chainId } = await provider.getNetwork();
-  //     console.log('>>>>>> chainId => ', chainId);
 
   //     /* --------------- Switch network --------------- */
   //     if (chainId === CHAIN_ID) {
   //       accounts = await provider.listAccounts();
   //       signer = await provider.getSigner();
-  //       console.log('>>>>>> signer => ', signer);
   //       contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-  //       console.log('>>>>> contract => ', contract);
 
   //       dispatch({
   //         type: 'SET_CURRENT_ACCOUNT',
@@ -167,7 +164,6 @@ function WalletProvider({ children }) {
   //     }
   //     /* ---------------------------------------------- */
   //   } catch (error) {
-  //     console.log('>>>>> error => ', error);
   //     dispatch({
   //       type: 'SET_CURRENT_ACCOUNT',
   //       payload: ''
@@ -218,7 +214,6 @@ function WalletProvider({ children }) {
     });
 
     let wallets = await onboard.connectWallet();
-    console.log('>>>>>> wallets => ', wallets);
 
     if (wallets[0]) {
       // create an ethers provider with the last connected wallet provider
@@ -232,14 +227,11 @@ function WalletProvider({ children }) {
       let accounts = null;
       let contract = null;
       const { chainId } = await provider.getNetwork();
-      console.log('>>>>>> chainId => ', chainId);
 
       /* --------------- Switch network --------------- */
       if (chainId === CHAIN_ID) {
         accounts = await provider.listAccounts();
-        // console.log('>>>>>> signer => ', signer);
         contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-        console.log('>>>>> contract => ', contract);
 
         dispatch({
           type: 'SET_CURRENT_ACCOUNT',
