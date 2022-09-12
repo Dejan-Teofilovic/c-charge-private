@@ -122,19 +122,12 @@ export default function Home() {
       //   ethers.utils.parseEther(buyPrice),
       //   { from: currentAccount }
       // );
-      // console.log('>>>>>>>> busdContract => ', busdContract);
-      // console.log('>>>>>>>> bridgeContract => ', bridgeContract);
-      // console.log('>>>>>> ethers.utils.parseEther(buyPrice) => ', ethers.utils.parseEther(buyPrice))
-
-      console.log('>>>>> busdContract => ', busdContract);
-      console.log('>>>>> bridgeContract => ', bridgeContract);
 
       const approveTransaction = await busdContract.approve(
         CONTRACT_ADDRESS_BRIDGE,
         ethers.utils.parseEther(buyPrice)
       );
 
-      console.log('>>>>> approveTransaction => ', approveTransaction);
       await approveTransaction.wait();
 
       const transaction = await bridgeContract.presale(
@@ -154,7 +147,6 @@ export default function Home() {
       });
 
     } catch (error) {
-      console.log('>>>>>>>> error => ', error);
       closeLoading();
       if (error.code === 4001) {
         return openAlert({
@@ -193,7 +185,6 @@ export default function Home() {
         (async () => {
           try {
             openLoading();
-            console.log('>>>>> signer => ', signer);
             let _busdContract = new ethers.Contract(
               CONTRACT_ADDRESS_BUSD,
               CONTRACT_ABI_BUSD,
@@ -205,9 +196,6 @@ export default function Home() {
               signer
             );
 
-            console.log('>>>>>>> _busdContract => ', _busdContract);
-            console.log('>>>>>>> _bridgeContract => ', _bridgeContract);
-
             setBusdContract(_busdContract);
             setBridgeContract(_bridgeContract);
 
@@ -217,7 +205,6 @@ export default function Home() {
 
             closeLoading();
           } catch (error) {
-            console.log('>>>>>> error => ', error);
             closeLoading();
           }
         })();
