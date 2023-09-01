@@ -267,7 +267,6 @@ export default function Home() {
                     Connect Wallet
                   </PrimaryButton>
                 )
-
               }
             />
             <CardContent
