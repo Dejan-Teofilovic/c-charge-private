@@ -4,7 +4,7 @@
 [![Live site](readme_images/guide-site.png)](https://private.c-charge.io/)
 
 ## Contact info
-- **Email:** mr.new0509@gmail.com
+- **Email:** dejanteofilovic2@gmail.com
 - **Telegram:** [@mrnew0509](https://t.me/mrnew0509)
 - **Skype:** [@sin085](https://join.skype.com/invite/xat3AgpiRVOI)
 
